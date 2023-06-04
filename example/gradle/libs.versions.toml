@@ -1,5 +1,5 @@
 [versions]
-scala-version = "3.2.2"                             # required to run scala
+scala-version = "3.3.0"                             # required to run scala
 # insert the version of the dependencies here...
 
 [libraries]
