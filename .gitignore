@@ -1,21 +1,13 @@
+# Gradle
 .gradle
-**/build/
-!src/**/build/
+build
 
-# Ignore Gradle GUI config
-gradle-app.setting
+# IntelliJ
+.idea
 
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
+# Node
+node_modules/*
 
-# Avoid ignore Gradle wrappper properties
-!gradle-wrapper.properties
-
-# Cache of project
-.gradletasknamecache
-
-# Eclipse Gradle plugin generated files
-# Eclipse Core
-.project
-# JDT-specific (Eclipse Java Development Tools)
-.classpath
+# Draw.io
+*.bkp
+*.dtmp
