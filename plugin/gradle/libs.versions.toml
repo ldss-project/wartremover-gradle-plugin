@@ -2,7 +2,7 @@
 kotlin-version = "1.8.21"
 kotlin-doc-version = "1.8.10"
 kotest-version = "5.6.2"
-kotlin-qa-version = "0.34.1"
+kotlin-qa-version = "0.42.0"
 kotlin-serialization-version = "1.8.21"
 kotlinx-version = "1.5.1"
 kotlin-hocon-serialization-version = "1.4.10"
