@@ -1,0 +1,39 @@
+name: Build, Check and Deploy
+on:
+  push:
+    branches:
+      - "ci"
+    paths-ignore:
+      - "README.md"
+  pull_request:
+jobs:
+    check-build:
+      strategy:
+        matrix:
+          os: [windows, macos, ubuntu]
+          java-version: [8, 11, 17]
+      runs-on: ${{matrix.os}}-latest
+      steps:
+        # Install the specified version of Java in the provided runner
+        - name: Install Java
+          uses: actions/setup-java@v3
+          with:
+            distribution: 'adopt'
+            java-version: ${{matrix.java-version}}
+        # Clone the repository, with full history and submodules
+        - name: Clone Repository
+          uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+            submodules: recursive
+        # Prepare gradle wrapper for execution
+        - name: Prepare Gradle
+          working-directory: plugin
+          run: chmod 777 ./gradlew
+        # Validate the gradle wrapper to void supply chain attacks from pull-request that changes the wrapper
+        - name: Validate Gradle Wrapper
+          uses: gradle/wrapper-validation-action@v1
+        # Run the project tests
+        - name: Test Build
+          working-directory: plugin
+          run: ./gradlew test

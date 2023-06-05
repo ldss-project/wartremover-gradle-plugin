@@ -31,11 +31,6 @@ dependencies {
     testImplementation(gradleTestKit())
 }
 
-java {
-    targetCompatibility = JavaVersion.VERSION_11
-    sourceCompatibility = JavaVersion.VERSION_11
-}
-
 tasks.withType<Test>().configureEach { useJUnitPlatform() }
 
 // Publication
