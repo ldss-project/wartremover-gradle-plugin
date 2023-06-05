@@ -38,7 +38,7 @@ open class WartRemoverExtension(target: Project) {
                 """
                 No configuration file found at '${this.configFile.get().canonicalPath}'
                 Loading default configuration...
-                """.trimIndent()
+                """.trimIndent(),
             )
             ConfigFactory.parseResources(javaClass.classLoader, "configs/default.conf")
         }

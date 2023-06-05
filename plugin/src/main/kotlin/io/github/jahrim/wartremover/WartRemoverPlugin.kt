@@ -38,7 +38,7 @@ class WartRemoverPlugin : Plugin<Project> {
                     it.text.set(
                         wartRemoverCompilerOptions.joinToString("\n").ifBlank {
                             "No configuration found."
-                        }
+                        },
                     )
                 }
             }

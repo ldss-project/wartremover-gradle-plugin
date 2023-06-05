@@ -8,6 +8,7 @@ kotlinx-version = "1.5.1"
 kotlin-hocon-serialization-version = "1.4.10"
 typesafe-config-version = "1.4.2"
 publish-on-central-version = "5.0.5"
+git-semantic-versioning-version = "1.1.9"
 # insert the versions of the dependencies here...
 
 [libraries]
@@ -28,4 +29,5 @@ kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }
 kotlin-doc = { id = "org.jetbrains.dokka", version.ref = "kotlin-doc-version" }
 kotlin-qa = { id = "org.danilopianini.gradle-kotlin-qa", version.ref = "kotlin-qa-version" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-serialization-version" }
+git-semantic-versioning = { id = "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin", version.ref = "git-semantic-versioning-version" }
 # insert groups of dependencies here...
