@@ -1,4 +1,4 @@
-name: Build, Check and Deploy
+name: Test and Publish
 on:
   push:
     branches:
@@ -6,8 +6,17 @@ on:
     paths-ignore:
       - "README.md"
   pull_request:
+
 jobs:
-    check-build:
+    # Log some info about the CI
+    debug:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Log Info
+          run: echo ${{toJSON(github)}}
+
+    # Test the project
+    test:
       strategy:
         matrix:
           os: [windows, macos, ubuntu]
@@ -26,14 +35,66 @@ jobs:
           with:
             fetch-depth: 0
             submodules: recursive
-        # Prepare gradle wrapper for execution
-        - name: Prepare Gradle
-          working-directory: plugin
-          run: chmod 777 ./gradlew
         # Validate the gradle wrapper to void supply chain attacks from pull-request that changes the wrapper
         - name: Validate Gradle Wrapper
           uses: gradle/wrapper-validation-action@v1
         # Run the project tests
         - name: Test Build
           working-directory: plugin
-          run: ./gradlew test
+          run: |
+            chmod 777 ./gradlew
+            ./gradlew test
+
+    # Publish the project
+    publish:
+      if: github.event_name == 'push'
+      needs:
+        - test
+      runs-on: ubuntu-latest
+      steps:
+        # Install the specified version of Java in the provided runner
+        - name: Install Java
+          uses: actions/setup-java@v3
+          with:
+            distribution: 'adopt'
+            java-version: 11
+        # Install Node in the provided runner
+        - name: Install Node
+          uses: actions/setup-node@v3
+        # Clone the repository, with full history and submodules
+        - name: Clone Repository
+          uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+            submodules: recursive
+        # Validate the gradle wrapper to void supply chain attacks from pull-request that changes the wrapper
+        - name: Validate Gradle Wrapper
+          uses: gradle/wrapper-validation-action@v1
+        # Build the project artifacts
+        - name: Build Project
+          working-directory: plugin
+          run: |
+            chmod 777 ./gradlew
+            ./gradlew build
+        # Publish artifacts on GitHub
+        - name: Publish on GitHub
+          working-directory: plugin
+          env:
+            GITHUB_TOKEN: ${{secrets.GH_TOKEN}}
+            GIT_COMMITTER_NAME: Jahrim Gabriele Cesario
+            GIT_COMMITTER_EMAIL: jahrim.cesario2@studio.unibo.it
+            GIT_AUTHOR_NAME: Jahrim Gabriele Cesario
+            GIT_AUTHOR_EMAIL: jahrim.cesario2@studio.unibo.it
+          run: |
+            npm clean-install
+            npx semantic-release
+        # Publish artifacts on Maven
+        - name: Publish on Maven
+          working-directory: plugin
+          env:
+            ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_SIGNING_KEY }}
+            ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_SIGNING_PASSWORD }}
+            ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.MAVEN_USERNAME }}
+            ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.MAVEN_PASSWORD }}
+          run: ./gradlew publish --no-parallel
+

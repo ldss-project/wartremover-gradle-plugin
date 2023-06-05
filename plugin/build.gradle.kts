@@ -5,18 +5,17 @@ private class ProjectInfo {
         const val website: String = "https://github.com/ldss-project/wartremover-gradle-plugin"
 
         const val pluginId: String = "io.github.jahrim.wartremover"
-        const val version: String = "0.1.0-SNAPSHOT"
         const val implementationClass: String = "io.github.jahrim.wartremover.WartRemoverPlugin"
     }
 }
 group = ProjectInfo.pluginId
-version = ProjectInfo.version
 
 plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.kotlin.doc)
     alias(libs.plugins.kotlin.qa)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.git.semantic.versioning)
     `java-gradle-plugin`
     `maven-publish`
     signing
@@ -34,6 +33,8 @@ dependencies {
 tasks.withType<Test>().configureEach { useJUnitPlatform() }
 
 // Publication
+gitSemVer { assignGitSemanticVersion() }
+
 gradlePlugin {
     plugins {
         create("wartremover") {
@@ -82,6 +83,18 @@ publishing {
                 connection.set("${ProjectInfo.website}.git")
                 developerConnection.set("scm:git:${ProjectInfo.website}.git")
                 url.set(ProjectInfo.website)
+            }
+
+            repositories {
+                maven {
+                    url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                    credentials {
+                        val mavenUsername: String? by project
+                        val mavenPassword: String? by project
+                        username = mavenUsername
+                        password = mavenPassword
+                    }
+                }
             }
         }
     }
