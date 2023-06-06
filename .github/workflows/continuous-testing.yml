@@ -7,16 +7,6 @@ on:
       - "plugin/**"
 
 jobs:
-    # Log some info about the CI context
-    debug:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Log Info
-          run: |
-            echo 'Event: ${{github.event_name}}'
-            echo 'Branch: ${{github.ref_name}}'
-            echo 'Content: ${{toJSON(github.event)}}'
-
     # Test the project
     test:
       strategy:
@@ -52,7 +42,6 @@ jobs:
     success:
       runs-on: ubuntu-22.04
       needs:
-        - debug
         - test
       # Executes always (even if previous jobs have failed, but not if any of them has been cancelled)
       if: >-

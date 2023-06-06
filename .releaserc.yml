@@ -12,10 +12,7 @@ plugins:
   - [
     "@semantic-release/github", {
       assets: [{
-        label: "WartRemover Sources",
-        path: [
-          "plugin/build/libs/*-sources.jar",
-          "plugin/build/libs/*-javadoc.jar",
-        ],
+        label: "WartRemover",
+        path: "plugin/build/libs",
       }]
     }]
