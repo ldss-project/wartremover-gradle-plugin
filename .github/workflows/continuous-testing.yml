@@ -35,6 +35,7 @@ jobs:
         - name: Clone Repository
           uses: actions/checkout@v3
           with:
+            token: ${{ secrets.GH_TOKEN }}
             fetch-depth: 0
             submodules: recursive
         # Validate the gradle wrapper to void supply chain attacks from pull-request that changes the wrapper
