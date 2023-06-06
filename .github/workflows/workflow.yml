@@ -86,6 +86,10 @@ jobs:
             ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.MAVEN_USERNAME }}
             ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.MAVEN_PASSWORD }}
           run: ./gradlew publish --no-parallel
+        # Publish artifacts on Gradle Portal
+        - name: Publish on Gradle Portal
+          working-directory: plugin
+          run: ./gradlew publishPlugins -Pgradle.publish.key=${{ secrets.GRADLE_PORTAL_KEY }} -Pgradle.publish.secret=${{ secrets.GRADLE_PORTAL_SECRET }}
         # Publish artifacts on GitHub
         - name: Publish on GitHub
           working-directory: plugin
