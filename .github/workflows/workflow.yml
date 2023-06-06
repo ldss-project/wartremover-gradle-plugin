@@ -1,9 +1,11 @@
 name: Test and Publish
 on:
   push:
-    paths-ignore:
-      - "README.md"
+    paths:
+      - "plugin/**"
   pull_request:
+    paths:
+      - "plugin/**"
 
 jobs:
     # Log some info about the CI context
