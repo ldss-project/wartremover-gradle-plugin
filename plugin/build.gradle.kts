@@ -11,11 +11,15 @@ private class ProjectInfo {
 group = ProjectInfo.pluginId
 
 plugins {
-    alias(libs.plugins.kotlin)
-    alias(libs.plugins.kotlin.doc)
-    alias(libs.plugins.kotlin.qa)
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.git.semantic.versioning)
+    with(libs.plugins) {
+        alias(kotlin)
+        alias(kotlin.doc)
+        alias(kotlin.qa)
+        alias(kotlin.serialization)
+        alias(task.tree.generator)
+        alias(git.semantic.versioning)
+        alias(publish.on.gradle.portal)
+    }
     `java-gradle-plugin`
     `maven-publish`
     signing
@@ -36,9 +40,13 @@ tasks.withType<Test>().configureEach { useJUnitPlatform() }
 gitSemVer { assignGitSemanticVersion() }
 
 gradlePlugin {
+    this.website.set(ProjectInfo.website)
+    this.vcsUrl.set("${ProjectInfo.website}.git")
     plugins {
         create("wartremover") {
             id = ProjectInfo.pluginId
+            displayName = ProjectInfo.longName
+            description = ProjectInfo.description
             implementationClass = ProjectInfo.implementationClass
         }
     }
