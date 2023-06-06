@@ -1,0 +1,105 @@
+name: Test
+on:
+  pull_request:
+    paths:
+      - ".github/**"
+      - ".releaserc.yml"
+      - "plugin/**"
+
+jobs:
+    # Log some info about the CI context
+    debug:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Log Info
+          run: |
+            echo 'Event: ${{github.event_name}}'
+            echo 'Branch: ${{github.ref_name}}'
+            echo 'Content: ${{toJSON(github.event)}}'
+
+    # Test the project
+    test:
+      strategy:
+        matrix:
+          os: [windows, macos, ubuntu]
+          java-version: [8, 11, 17]
+      runs-on: ${{matrix.os}}-latest
+      steps:
+        # Install the specified version of Java in the provided runner
+        - name: Install Java
+          uses: actions/setup-java@v3
+          with:
+            distribution: 'adopt'
+            java-version: ${{matrix.java-version}}
+        # Clone the repository, with full history and submodules
+        - name: Clone Repository
+          uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+            submodules: recursive
+        # Validate the gradle wrapper to void supply chain attacks from pull-request that changes the wrapper
+        - name: Validate Gradle Wrapper
+          uses: gradle/wrapper-validation-action@v1
+        # Run the project tests
+        - name: Test Build
+          working-directory: plugin
+          run: |
+            chmod 777 ./gradlew
+            ./gradlew test
+
+    # Publish the project
+    publish:
+      if: github.event_name == 'push' && github.ref_name == 'master'
+      needs:
+        - test
+      runs-on: ubuntu-latest
+      steps:
+        # Install the specified version of Java in the provided runner
+        - name: Install Java
+          uses: actions/setup-java@v3
+          with:
+            distribution: 'adopt'
+            java-version: 11
+        # Install Node in the provided runner
+        - name: Install Node
+          uses: actions/setup-node@v3
+        # Clone the repository, with full history and submodules
+        - name: Clone Repository
+          uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+            submodules: recursive
+        # Validate the gradle wrapper to void supply chain attacks from pull-request that changes the wrapper
+        - name: Validate Gradle Wrapper
+          uses: gradle/wrapper-validation-action@v1
+        # Build the project artifacts
+        - name: Build Project
+          working-directory: plugin
+          run: |
+            chmod 777 ./gradlew
+            ./gradlew build
+        # Create and publish artifacts on Maven
+        - name: Publish on Maven
+          working-directory: plugin
+          env:
+            ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_SIGNING_KEY }}
+            ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_SIGNING_PASSWORD }}
+            ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.MAVEN_USERNAME }}
+            ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.MAVEN_PASSWORD }}
+          run: ./gradlew publish --no-parallel
+        # Publish artifacts on Gradle Portal
+        - name: Publish on Gradle Portal
+          working-directory: plugin
+          run: ./gradlew publishPlugins -Pgradle.publish.key=${{ secrets.GRADLE_PORTAL_KEY }} -Pgradle.publish.secret=${{ secrets.GRADLE_PORTAL_SECRET }}
+        # Publish artifacts on GitHub
+        - name: Publish on GitHub
+          working-directory: plugin
+          env:
+            GITHUB_TOKEN: ${{secrets.GH_TOKEN}}
+            GIT_COMMITTER_NAME: Jahrim Gabriele Cesario
+            GIT_COMMITTER_EMAIL: jahrim.cesario2@studio.unibo.it
+            GIT_AUTHOR_NAME: Jahrim Gabriele Cesario
+            GIT_AUTHOR_EMAIL: jahrim.cesario2@studio.unibo.it
+          run: |
+            npm clean-install
+            npx semantic-release
