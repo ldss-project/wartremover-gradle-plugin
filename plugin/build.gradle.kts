@@ -6,6 +6,7 @@ private class ProjectInfo {
 
         const val pluginId: String = "io.github.jahrim.wartremover"
         const val implementationClass: String = "io.github.jahrim.wartremover.WartRemoverPlugin"
+        val tags = listOf("wartremover", "code linter", "scala")
     }
 }
 group = ProjectInfo.pluginId
@@ -18,11 +19,9 @@ plugins {
         alias(kotlin.serialization)
         alias(task.tree.generator)
         alias(git.semantic.versioning)
-        alias(publish.on.gradle.portal)
+        alias(publish)
+        signing
     }
-    `java-gradle-plugin`
-    `maven-publish`
-    signing
 }
 
 repositories { mavenCentral() }
@@ -37,6 +36,17 @@ dependencies {
 tasks.withType<Test>().configureEach { useJUnitPlatform() }
 
 // Publication
+val sourceJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(tasks.compileKotlin.get().sources)
+    from(tasks.processResources.get().source)
+}
+
+val javadocJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("javadoc")
+    from(tasks.dokkaJavadoc.get().outputDirectory)
+}
+
 gitSemVer { assignGitSemanticVersion() }
 
 gradlePlugin {
@@ -47,26 +57,14 @@ gradlePlugin {
             id = ProjectInfo.pluginId
             displayName = ProjectInfo.longName
             description = ProjectInfo.description
+            tags.set(ProjectInfo.tags)
             implementationClass = ProjectInfo.implementationClass
         }
     }
 }
 
-val sourceJarTask by tasks.registering(Jar::class) {
-    archiveClassifier.set("sources")
-    from(tasks.compileKotlin.get().sources)
-    from(tasks.processResources.get().source)
-}
-
-val docJarTask by tasks.registering(Jar::class) {
-    archiveClassifier.set("javadoc")
-    from(tasks.dokkaJavadoc.get().outputDirectory)
-}
-
 publishing {
     publications.create<MavenPublication>("pluginMaven") {
-        setArtifacts(listOf(sourceJarTask, docJarTask))
-
         pom {
             name.set(ProjectInfo.longName)
             description.set(ProjectInfo.description)
@@ -105,8 +103,8 @@ publishing {
                 }
             }
         }
+        signing { sign(publishing.publications["pluginMaven"]) }
     }
-    signing { sign(publishing.publications["pluginMaven"]) }
 }
 
 signing {

@@ -1,7 +1,7 @@
 plugins {
     scala
     application
-    id("io.github.jahrim.wartremover") version "0.1.0-SNAPSHOT"
+    id("io.github.jahrim.wartremover") version "0.1.0-dev0a+d2f9970"
 }
 
 repositories {
