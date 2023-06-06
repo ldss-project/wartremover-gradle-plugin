@@ -1,8 +1,6 @@
 name: Test and Publish
 on:
   push:
-    branches:
-      - "ci"
     paths-ignore:
       - "README.md"
   pull_request:
@@ -50,7 +48,7 @@ jobs:
 
     # Publish the project
     publish:
-      if: github.event_name == 'push'
+      if: github.event_name == 'push' && github.ref_name == 'master'
       needs:
         - test
       runs-on: ubuntu-latest
@@ -100,4 +98,3 @@ jobs:
           run: |
             npm clean-install
             npx semantic-release
-
