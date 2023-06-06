@@ -2,9 +2,13 @@ name: Test and Publish
 on:
   push:
     paths:
+      - ".github/**"
+      - ".releaserc.yml"
       - "plugin/**"
   pull_request:
     paths:
+      - ".github/**"
+      - ".releaserc.yml"
       - "plugin/**"
 
 jobs:
