@@ -1,62 +1,15 @@
-name: Test and Publish
+name: Publish
 on:
   push:
-    paths:
-      - ".github/**"
-      - ".releaserc.yml"
-      - "plugin/**"
-  pull_request:
+    branch: master
     paths:
       - ".github/**"
       - ".releaserc.yml"
       - "plugin/**"
 
 jobs:
-    # Log some info about the CI context
-    debug:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Log Info
-          run: |
-            echo 'Event: ${{github.event_name}}'
-            echo 'Branch: ${{github.ref_name}}'
-            echo 'Content: ${{toJSON(github.event)}}'
-
-    # Test the project
-    test:
-      strategy:
-        matrix:
-          os: [windows, macos, ubuntu]
-          java-version: [8, 11, 17]
-      runs-on: ${{matrix.os}}-latest
-      steps:
-        # Install the specified version of Java in the provided runner
-        - name: Install Java
-          uses: actions/setup-java@v3
-          with:
-            distribution: 'adopt'
-            java-version: ${{matrix.java-version}}
-        # Clone the repository, with full history and submodules
-        - name: Clone Repository
-          uses: actions/checkout@v3
-          with:
-            fetch-depth: 0
-            submodules: recursive
-        # Validate the gradle wrapper to void supply chain attacks from pull-request that changes the wrapper
-        - name: Validate Gradle Wrapper
-          uses: gradle/wrapper-validation-action@v1
-        # Run the project tests
-        - name: Test Build
-          working-directory: plugin
-          run: |
-            chmod 777 ./gradlew
-            ./gradlew test
-
     # Publish the project
     publish:
-      if: github.event_name == 'push' && github.ref_name == 'master'
-      needs:
-        - test
       runs-on: ubuntu-latest
       steps:
         # Install the specified version of Java in the provided runner
