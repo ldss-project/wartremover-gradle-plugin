@@ -22,6 +22,16 @@ jobs:
     # Publish the project
     publish:
       runs-on: ubuntu-latest
+      env:
+        GITHUB_TOKEN: ${{secrets.GH_TOKEN}}
+        GIT_COMMITTER_NAME: Jahrim Gabriele Cesario
+        GIT_COMMITTER_EMAIL: jahrim.cesario2@studio.unibo.it
+        GIT_AUTHOR_NAME: Jahrim Gabriele Cesario
+        GIT_AUTHOR_EMAIL: jahrim.cesario2@studio.unibo.it
+        ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_SIGNING_KEY }}
+        ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_SIGNING_PASSWORD }}
+        ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.MAVEN_USERNAME }}
+        ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.MAVEN_PASSWORD }}
       steps:
         # Install the specified version of Java in the provided runner
         - name: Install Java
@@ -50,11 +60,6 @@ jobs:
         # Create and publish artifacts on Maven
         - name: Publish on Maven
           working-directory: plugin
-          env:
-            ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_SIGNING_KEY }}
-            ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_SIGNING_PASSWORD }}
-            ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.MAVEN_USERNAME }}
-            ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.MAVEN_PASSWORD }}
           run: ./gradlew publish --no-parallel
         # Publish artifacts on Gradle Portal
         - name: Publish on Gradle Portal
@@ -63,12 +68,6 @@ jobs:
         # Publish artifacts on GitHub
         - name: Publish on GitHub
           working-directory: plugin
-          env:
-            GITHUB_TOKEN: ${{secrets.GH_TOKEN}}
-            GIT_COMMITTER_NAME: Jahrim Gabriele Cesario
-            GIT_COMMITTER_EMAIL: jahrim.cesario2@studio.unibo.it
-            GIT_AUTHOR_NAME: Jahrim Gabriele Cesario
-            GIT_AUTHOR_EMAIL: jahrim.cesario2@studio.unibo.it
           run: |
             npm clean-install
             npx semantic-release
