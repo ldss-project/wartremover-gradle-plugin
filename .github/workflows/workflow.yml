@@ -8,12 +8,15 @@ on:
   pull_request:
 
 jobs:
-    # Log some info about the CI
+    # Log some info about the CI context
     debug:
       runs-on: ubuntu-latest
       steps:
         - name: Log Info
-          run: echo ${{toJSON(github)}}
+          run: |
+            echo 'Event: ${{github.event_name}}'
+            echo 'Branch: ${{github.ref_name}}'
+            echo 'Content: ${{toJSON(github.event)}}'
 
     # Test the project
     test:
@@ -76,6 +79,15 @@ jobs:
           run: |
             chmod 777 ./gradlew
             ./gradlew build
+        # Create and publish artifacts on Maven
+        - name: Publish on Maven
+          working-directory: plugin
+          env:
+            ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_SIGNING_KEY }}
+            ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_SIGNING_PASSWORD }}
+            ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.MAVEN_USERNAME }}
+            ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.MAVEN_PASSWORD }}
+          run: ./gradlew publish --no-parallel
         # Publish artifacts on GitHub
         - name: Publish on GitHub
           working-directory: plugin
@@ -88,13 +100,4 @@ jobs:
           run: |
             npm clean-install
             npx semantic-release
-        # Publish artifacts on Maven
-        - name: Publish on Maven
-          working-directory: plugin
-          env:
-            ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_SIGNING_KEY }}
-            ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_SIGNING_PASSWORD }}
-            ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.MAVEN_USERNAME }}
-            ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.MAVEN_PASSWORD }}
-          run: ./gradlew publish --no-parallel
 

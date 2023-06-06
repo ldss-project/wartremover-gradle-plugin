@@ -1,18 +1,21 @@
-"tagFormat": "${version}"
-
-"branches":
-  - "master"
-
-"plugins":
+branch: master
+tagFormat: "${version}"
+plugins:
   # Analyzes commits to identify the type of update (ex.: fix -> PATCH, feat -> MINOR...)
   - "@semantic-release/commit-analyzer"
 
-  # Generates the changelog text and creates a CHANGELOG file at each release
+  # Generates the changelog text and creates a CHANGELOG.md file at each release
   - "@semantic-release/release-notes-generator"
   - "@semantic-release/changelog"
 
   # Publish on GitHub
-  - - "@semantic-release/github"
-    - "assets":
-      - "path": "chess/build/libs/chess.jar"
-        "label": "Executable fat JAR"
+  - [
+    "@semantic-release/github", {
+      assets: [{
+        label: "WartRemover Sources",
+        path: [
+          "plugin/build/libs/*-sources.jar",
+          "plugin/build/libs/*-javadoc.jar",
+        ],
+      }]
+    }]
