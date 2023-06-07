@@ -9,10 +9,4 @@ plugins:
   - "@semantic-release/changelog"
 
   # Publish on GitHub
-  - [
-    "@semantic-release/github", {
-      assets: [{
-        label: "WartRemover",
-        path: "plugin/build/libs",
-      }]
-    }]
+  - "@semantic-release/github"

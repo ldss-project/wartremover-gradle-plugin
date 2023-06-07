@@ -4,12 +4,12 @@ private class ProjectInfo {
         const val description: String = "A plugin for applying WartRemover code linting to scala, by means of a configuration file."
         const val website: String = "https://github.com/ldss-project/wartremover-gradle-plugin"
 
-        const val pluginId: String = "io.github.jahrim.wartremover"
+        const val pluginGroup: String = "io.github.jahrim"
+        val pluginId: String = "${pluginGroup}.wartremover"
         const val implementationClass: String = "io.github.jahrim.wartremover.WartRemoverPlugin"
         val tags = listOf("wartremover", "code linter", "scala")
     }
 }
-group = ProjectInfo.pluginId
 
 plugins {
     with(libs.plugins) {
@@ -47,7 +47,11 @@ val javadocJar by tasks.registering(Jar::class) {
     from(tasks.dokkaJavadoc.get().outputDirectory)
 }
 
-gitSemVer { assignGitSemanticVersion() }
+group = ProjectInfo.pluginGroup
+gitSemVer {
+    buildMetadataSeparator.set("-")
+    assignGitSemanticVersion()
+}
 
 gradlePlugin {
     this.website.set(ProjectInfo.website)
