@@ -5,7 +5,7 @@ private class ProjectInfo {
         const val website: String = "https://github.com/ldss-project/wartremover-gradle-plugin"
 
         const val pluginGroup: String = "io.github.jahrim"
-        val pluginId: String = "${pluginGroup}.wartremover"
+        val pluginId: String = "$pluginGroup.wartremover"
         const val implementationClass: String = "io.github.jahrim.wartremover.WartRemoverPlugin"
         val tags = listOf("wartremover", "code linter", "scala")
     }
@@ -68,7 +68,7 @@ gradlePlugin {
 }
 
 publishing {
-    publications.create<MavenPublication>("pluginMaven") {
+    publications.withType(MavenPublication::class.java) {
         pom {
             name.set(ProjectInfo.longName)
             description.set(ProjectInfo.description)
@@ -94,20 +94,18 @@ publishing {
                 developerConnection.set("scm:git:${ProjectInfo.website}.git")
                 url.set(ProjectInfo.website)
             }
-
-            repositories {
-                maven {
-                    url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                    credentials {
-                        val mavenUsername: String? by project
-                        val mavenPassword: String? by project
-                        username = mavenUsername
-                        password = mavenPassword
-                    }
-                }
+        }
+    }
+    repositories {
+        maven {
+            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            credentials {
+                val mavenUsername: String? by project
+                val mavenPassword: String? by project
+                username = mavenUsername
+                password = mavenPassword
             }
         }
-        signing { sign(publishing.publications["pluginMaven"]) }
     }
 }
 
