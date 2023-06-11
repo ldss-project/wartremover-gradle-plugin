@@ -2,11 +2,18 @@ private class ProjectInfo {
     companion object {
         const val longName: String = "WartRemover Gradle Plugin"
         const val description: String = "A plugin for applying WartRemover code linting to scala, by means of a configuration file."
-        const val website: String = "https://github.com/ldss-project/wartremover-gradle-plugin"
 
-        const val pluginGroup: String = "io.github.jahrim"
-        val pluginId: String = "$pluginGroup.wartremover"
+        const val repositoryOwner: String = "ldss-project"
+        const val repositoryName: String = "wartremover-gradle-plugin"
+
+        const val artifactGroup: String = "io.github.jahrim"
+        const val artifactId: String = "wartremover"
         const val implementationClass: String = "io.github.jahrim.wartremover.WartRemoverPlugin"
+
+        const val license = "The MIT License"
+        const val licenseUrl = "https://opensource.org/licenses/MIT"
+
+        val website = "https://github.com/$repositoryOwner/$repositoryName"
         val tags = listOf("wartremover", "code linter", "scala")
     }
 }
@@ -47,18 +54,18 @@ val javadocJar by tasks.registering(Jar::class) {
     from(tasks.dokkaJavadoc.get().outputDirectory)
 }
 
-group = ProjectInfo.pluginGroup
+group = ProjectInfo.artifactGroup
 gitSemVer {
     buildMetadataSeparator.set("-")
     assignGitSemanticVersion()
 }
 
 gradlePlugin {
-    this.website.set(ProjectInfo.website)
-    this.vcsUrl.set("${ProjectInfo.website}.git")
+    website.set(ProjectInfo.website)
+    vcsUrl.set("${ProjectInfo.website}.git")
     plugins {
         create("wartremover") {
-            id = ProjectInfo.pluginId
+            id = "${ProjectInfo.artifactGroup}.${ProjectInfo.artifactId}"
             displayName = ProjectInfo.longName
             description = ProjectInfo.description
             tags.set(ProjectInfo.tags)
@@ -76,8 +83,8 @@ publishing {
 
             licenses {
                 license {
-                    name.set("The MIT License")
-                    url.set("https://opensource.org/licenses/MIT")
+                    name.set(ProjectInfo.license)
+                    url.set(ProjectInfo.licenseUrl)
                 }
             }
 
@@ -90,9 +97,9 @@ publishing {
             }
 
             scm {
-                connection.set("${ProjectInfo.website}.git")
-                developerConnection.set("scm:git:${ProjectInfo.website}.git")
                 url.set(ProjectInfo.website)
+                connection.set("$url.git")
+                developerConnection.set("scm:git:$url.git")
             }
         }
     }
@@ -100,10 +107,10 @@ publishing {
         maven {
             url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
             credentials {
-                val mavenUsername: String? by project
-                val mavenPassword: String? by project
-                username = mavenUsername
-                password = mavenPassword
+                val mavenCentralUsername: String? by project
+                val mavenCentralPassword: String? by project
+                username = mavenCentralUsername
+                password = mavenCentralPassword
             }
         }
     }

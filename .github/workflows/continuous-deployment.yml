@@ -20,8 +20,8 @@ jobs:
         GIT_AUTHOR_EMAIL: jahrim.cesario2@studio.unibo.it
         ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_SIGNING_KEY }}
         ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_SIGNING_PASSWORD }}
-        ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.MAVEN_USERNAME }}
-        ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.MAVEN_PASSWORD }}
+        ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+        ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
       steps:
         # Install the specified version of Java in the provided runner
         - name: Install Java
@@ -57,4 +57,3 @@ jobs:
         - name: Publish on Gradle Portal
           working-directory: plugin
           run: ./gradlew publishPlugins -Pgradle.publish.key=${{ secrets.GRADLE_PORTAL_KEY }} -Pgradle.publish.secret=${{ secrets.GRADLE_PORTAL_SECRET }}
-
