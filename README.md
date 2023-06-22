@@ -1,8 +1,8 @@
 # WartRemover Gradle Plugin
 
-[![GitHub Release](https://img.shields.io/github/v/tag/ldss-project/wartremover-gradle-plugin?label=Github&color=limegreen)](https://github.com/ldss-project/wartremover-gradle-plugin/releases)
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.jahrim/wartremover?label=Maven%20Central&color=limegreen)](https://central.sonatype.com/artifact/io.github.jahrim/wartremover)
-[![Gradle Portal Release](https://img.shields.io/gradle-plugin-portal/v/io.github.jahrim.wartremover?label=Gradle%20Plugin%20Portal&color=limegreen)](https://plugins.gradle.org/plugin/io.github.jahrim.wartremover)
+[![GitHub Release](https://img.shields.io/github/v/tag/ldss-project/wartremover-gradle-plugin?label=Github&color=blue)](https://github.com/ldss-project/wartremover-gradle-plugin/releases)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.jahrim/wartremover?label=Maven%20Central&color=blue)](https://central.sonatype.com/artifact/io.github.jahrim/wartremover)
+[![Gradle Portal Release](https://img.shields.io/gradle-plugin-portal/v/io.github.jahrim.wartremover?label=Gradle%20Plugin%20Portal&color=blue)](https://plugins.gradle.org/plugin/io.github.jahrim.wartremover)
 [![Test](https://github.com/ldss-project/wartremover-gradle-plugin/actions/workflows/continuous-testing.yml/badge.svg)](https://github.com/ldss-project/wartremover-gradle-plugin/actions/workflows/continuous-testing.yml)
 [![Deployment](https://github.com/ldss-project/wartremover-gradle-plugin/actions/workflows/continuous-deployment.yml/badge.svg)](https://github.com/ldss-project/wartremover-gradle-plugin/actions/workflows/continuous-testing.yml)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fldss-project%2Fwartremover-gradle-plugin.svg)](https://fossa.com/)
