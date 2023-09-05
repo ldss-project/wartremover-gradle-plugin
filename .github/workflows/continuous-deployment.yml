@@ -22,6 +22,8 @@ jobs:
         ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_SIGNING_PASSWORD }}
         ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
         ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+        ORG_GRADLE_PROJECT_gradlePublishKey: ${{ secrets.GRADLE_PORTAL_KEY }}
+        ORG_GRADLE_PROJECT_gradlePublishSecret: ${{ secrets.GRADLE_PORTAL_SECRET }}
       steps:
         # Install the specified version of Java in the provided runner
         - name: Install Java
@@ -43,17 +45,7 @@ jobs:
         - name: Validate Gradle Wrapper
           uses: gradle/wrapper-validation-action@v1
         # Publish artifacts on GitHub
-        - name: Publish on GitHub
+        - name: Publish on Maven, Gradle Portal and GitHub
           run: |
             npm clean-install
             npx semantic-release
-        # Publish artifacts on Maven
-        - name: Publish on Maven
-          working-directory: plugin
-          run: |
-            chmod 777 ./gradlew
-            ./gradlew publish --no-parallel
-        # Publish artifacts on Gradle Portal
-        - name: Publish on Gradle Portal
-          working-directory: plugin
-          run: ./gradlew publishPlugins -Pgradle.publish.key=${{ secrets.GRADLE_PORTAL_KEY }} -Pgradle.publish.secret=${{ secrets.GRADLE_PORTAL_SECRET }}

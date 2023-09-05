@@ -74,6 +74,14 @@ gradlePlugin {
     }
 }
 
+val setupPublishPlugin by tasks.registering {
+    val gradlePublishKey: String? by project
+    val gradlePublishSecret: String? by project
+    gradlePublishKey?.apply{ System.setProperty("gradle.publish.key", this) }
+    gradlePublishSecret?.apply{ System.setProperty("gradle.publish.secret", this) }
+}
+tasks.named("publishPlugins"){ dependsOn(setupPublishPlugin) }
+
 publishing {
     publications.withType(MavenPublication::class.java) {
         pom {
