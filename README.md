@@ -105,3 +105,7 @@ For example:
 @SuppressWarnings(Array("org.wartremover.warts.Null"))
 val myCodeHasToBe = null
 ```
+
+## Development
+
+See documentation at the [repository webpage](https://ldss-project.github.io/wartremover-gradle-plugin).

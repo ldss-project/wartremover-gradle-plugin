@@ -39,7 +39,7 @@ jobs:
             token: ${{ secrets.GH_TOKEN }}
             fetch-depth: 0
             submodules: recursive
-        # Validate the gradle wrapper to void supply chain attacks from pull-request that changes the wrapper
+        # Validate the gradle wrapper to avoid supply chain attacks from pull-request that changes the wrapper
         - name: Validate Gradle Wrapper
           uses: gradle/wrapper-validation-action@v1
         # Publish artifacts on GitHub

@@ -1,0 +1,5 @@
+title: "WartRemover Gradle Plugin"
+description: Gradle plugin for configuring WartRemover as a code linter in a Scala 3 project.
+theme: just-the-docs
+
+url: https://ldss-project.github.io/wartremover-gradle-plugin
