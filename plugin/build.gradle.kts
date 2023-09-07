@@ -27,6 +27,7 @@ plugins {
         alias(task.tree.generator)
         alias(git.semantic.versioning)
         alias(publish)
+        alias(spotless)
         signing
     }
 }
@@ -42,6 +43,12 @@ dependencies {
 
 tasks.withType<Test>().configureEach { useJUnitPlatform() }
 
+spotless {
+    kotlin {
+        target("src/**/*.kt")
+        licenseHeader("/*\n${file("../LICENSE").readText()}\n*/", "package ")
+    }
+}
 // Publication
 val sourceJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
@@ -77,10 +84,10 @@ gradlePlugin {
 val setupPublishPlugin by tasks.registering {
     val gradlePublishKey: String? by project
     val gradlePublishSecret: String? by project
-    gradlePublishKey?.apply{ System.setProperty("gradle.publish.key", this) }
-    gradlePublishSecret?.apply{ System.setProperty("gradle.publish.secret", this) }
+    gradlePublishKey?.apply { System.setProperty("gradle.publish.key", this) }
+    gradlePublishSecret?.apply { System.setProperty("gradle.publish.secret", this) }
 }
-tasks.named("publishPlugins"){ dependsOn(setupPublishPlugin) }
+tasks.named("publishPlugins") { dependsOn(setupPublishPlugin) }
 
 publishing {
     publications.withType(MavenPublication::class.java) {

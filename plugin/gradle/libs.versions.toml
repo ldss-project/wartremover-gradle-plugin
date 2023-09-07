@@ -10,6 +10,7 @@ typesafe-config-version = "1.4.2"
 publish-version = "1.2.0"
 git-semantic-versioning-version = "1.1.9"
 task-tree-generator-version = "2.1.1"
+spotless-version = "6.15.0"
 # insert the versions of the dependencies here...
 
 [libraries]
@@ -33,4 +34,5 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 git-semantic-versioning = { id = "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin", version.ref = "git-semantic-versioning-version" }
 publish = { id = "com.gradle.plugin-publish", version.ref = "publish-version" }
 task-tree-generator = { id = "com.dorongold.task-tree", version.ref = "task-tree-generator-version" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless-version" }
 # insert groups of dependencies here...
