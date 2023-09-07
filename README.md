@@ -44,7 +44,7 @@ The plugin should be configured by specifying where to look for such configurati
 
 ```kotlin
 wartremover {
-    configFile("<path-to-your-configuration-file>")       //default: .wartremover.conf
+    configFile("<path-to-your-configuration-file>")       // default: .wartremover.conf
 }
 ```
 
