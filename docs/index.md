@@ -9,9 +9,10 @@ nav_order: 1
 
 ---
 
+## Development
 
+![UML Class Diagram](/wartremover-gradle-plugin/resources/images/class-diagram.png)
 
 ---
 
-[Back to Top](#top) |
-[Next Chapter](/wartremover-gradle-plugin/)
+[Back to Top](#top)
