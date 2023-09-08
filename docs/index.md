@@ -7,6 +7,12 @@ nav_order: 1
 # WartRemover Gradle Plugin
 {: .no_toc}
 
+## Index
+{: .no_toc}
+
+- TOC
+{:toc}
+
 ---
 
 ## Purpose
