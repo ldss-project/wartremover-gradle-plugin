@@ -9,9 +9,7 @@ nav_order: 1
 
 ---
 
-## Development
-
-### Purpose
+## Purpose
 
 The [WartRemover Gradle Plugin](https://github.com/ldss-project/wartremover-gradle-plugin) is a
 plugin for Gradle whose goal is to simplify the configuration of the code linter
@@ -32,18 +30,18 @@ This plugin offers two basic services:
 - It can convert proper [HOCON](https://github.com/lightbend/config/blob/main/HOCON.md#hocon-human-optimized-config-object-notation)
   configuration files into compiler options for the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover).
 
-### Implementation
+## Implementation
 
 The implementation of this plugin is described by the following UML Class Diagram.
 
 ![UML Class Diagram](/wartremover-gradle-plugin/resources/images/class-diagram.png)
 
-#### WartRemoverPlugin
+### WartRemoverPlugin
 The `WartRemoverPlugin` is a `org.gradle.api.Plugin`, so that it can be applied to
 a Gradle project.
 
 When applied, the `WartRemoverPlugin` does the following:
-1. Provides an extension for configuring the plugin, called `wartremover`;
+1. Provides an extension called `wartremover`, whose purpose is to configure this plugin;
 2. Adds the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover) to the
    project dependencies, applying it to the Scala 3 compiler, after the project evaluation.
 
@@ -52,10 +50,10 @@ When applied, the `WartRemoverPlugin` does the following:
 3. Configures the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover)
    using the [HOCON](https://github.com/lightbend/config/blob/main/HOCON.md#hocon-human-optimized-config-object-notation)
    configuration file provided by the user, after the project evaluation;
-4. Provides a task to print to the console the compiler options provided by the user, called
-   `wartRemoverCompilerOptions`.
+4. Provides a task called `wartRemoverCompilerOptions`, whose purpose is to print to the console the
+   compiler options provided by the user.
 
-#### WartRemoverExtension
+### WartRemoverExtension
 
 The `wartremover` extension is modelled by the class `WartRemoverExtension`, which provides
 methods to set the [HOCON](https://github.com/lightbend/config/blob/main/HOCON.md#hocon-human-optimized-config-object-notation)
@@ -98,7 +96,7 @@ from its internal map.
 These compiler options are finally applied by the `WartRemoverPlugin` to the Scala 3 compiler, after the evaluation
 of the project.
 
-#### PrintTask
+### PrintTask
 
 The task `wartRemoverCompilerOptions` is a type of `PrintTask`, where a `PrintTask` is a task which takes
 a text as input to be printed to the console when called by the user.
@@ -106,10 +104,18 @@ a text as input to be printed to the console when called by the user.
 In particular, the task `wartRemoverCompilerOptions` is configured within the `WartRemoverPlugin` to print
 the compiler options computed for configuring the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover).
 
-### Testing
+## Testing
 
 The plugin has been tested using the [Gradle TestKit](https://docs.gradle.org/current/userguide/test_kit.html)
 on a _build file_ defined specifically for testing purposes.
+
+The goal of the provided tests was mainly to verify that this plugin could be applied to a Gradle
+project and that the compiler options for the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover)
+were computed correctly from the [HOCON](https://github.com/lightbend/config/blob/main/HOCON.md#hocon-human-optimized-config-object-notation)
+configuration file provided by the user.
+
+> **Note**: the test suite should be extended to verify that all _warts_ are identified correctly within
+> some sample Scala 3 projects.
 
 ---
 
