@@ -38,62 +38,60 @@ This plugin offers two basic services:
 
 ## Implementation
 
-The implementation of this plugin is described by the following UML Class Diagram.
+The implementation of this plugin is described by the following UML Class Diagram,
+which will be explained in the following sections.
 
 ![UML Class Diagram](/wartremover-gradle-plugin/resources/images/class-diagram.png)
 
 ### WartRemoverPlugin
-The `WartRemoverPlugin` is a `org.gradle.api.Plugin`, so that it can be applied to
-a Gradle project.
+The `WartRemoverPlugin` is a `org.gradle.api.Plugin`, meaning that it can be applied to
+a Gradle project as any other Gradle plugin.
 
 When applied, the `WartRemoverPlugin` does the following:
-1. Provides an extension called `wartremover`, whose purpose is to configure this plugin;
-2. Adds the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover) to the
-   project dependencies, applying it to the Scala 3 compiler, after the project evaluation.
+1. Provide an extension called `wartremover`, whose purpose is to configure this plugin;
+2. After the project evaluation:
+   1. Add the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover) to the
+      project dependencies, applying it to the Scala 3 compiler.
 
-   The version of the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover) is
-   computed from the version of the Scala 3 dependency provided by the user;
-3. Configures the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover)
-   using the [HOCON](https://github.com/lightbend/config/blob/main/HOCON.md#hocon-human-optimized-config-object-notation)
-   configuration file provided by the user, after the project evaluation;
-4. Provides a task called `wartRemoverCompilerOptions`, whose purpose is to print to the console the
-   compiler options provided by the user.
+      The version of the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover) is
+      computed from the version of the Scala 3 dependency provided by the user;
+   2. Configure the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover)
+      using the [HOCON](https://github.com/lightbend/config/blob/main/HOCON.md#hocon-human-optimized-config-object-notation)
+      configuration file provided by the user;
+   3. Provide a task called `wartRemoverCompilerOptions`, whose purpose is to print to the console the
+      compiler options provided by the user.
 
 ### WartRemoverExtension
 
-The `wartremover` extension is modelled by the class `WartRemoverExtension`, which provides
-methods to set the [HOCON](https://github.com/lightbend/config/blob/main/HOCON.md#hocon-human-optimized-config-object-notation)
-configuration file used to compute the compiler options for the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover)
-and to retrieve those compiler options.
+The `wartremover` extension is modelled by the class `WartRemoverExtension`, which provides the
+following methods:
+- `configFile`: set the path to the HOCON configuration file used to compute the compiler options
+  for the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover). By default,
+  this is set to the `.wartremover.conf` file within the root directory of the user's project.
+- `compilerOptions`: parse the [HOCON](https://github.com/lightbend/config/blob/main/HOCON.md#hocon-human-optimized-config-object-notation)
+  configuration file provided by the user, producing the compiler options for the
+  [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover). If no configuration
+  file is provided, it produces the default compiler options.
 
 These methods can be accessed also by the user as follows:
 
 ```kotlin
-// WartRemover extension
+// build.gradle.kts
 wartremover {
-    // Set the HOCON configuration file used to compute the WartRemover compiler options
     configFile(".custom-wartremover.conf")
-    // Retrieve the computed WartRemover compiler options
     val options = compilerOptions()
 }
 ```
 
-When calling the `configFile` method, the user can set the path to the
-[HOCON](https://github.com/lightbend/config/blob/main/HOCON.md#hocon-human-optimized-config-object-notation)
-configuration file to be parsed by this plugin. By default, this is set
-to a `.wartremover.conf` file within the root directory of the user's project.
-
-When calling the `compilerOptions` method, the `WartRemoverExtension` parses the [HOCON](https://github.com/lightbend/config/blob/main/HOCON.md#hocon-human-optimized-config-object-notation)
-configuration file provided by the user, producing the corresponding `WartRemoverCompilerConfiguration`, which is a type
-of `CompilerConfiguration`. If no configuration file is provided, the `WartRemoverExtension` produces the default
-`WartRemoverCompilerConfiguration`.
+The compiler options for the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover)
+are modelled by the class `WartRemoverCompilerConfiguration`, which is a type of `CompilerConfiguration`.
 
 A `CompilerConfiguration` is a list of compiler options that can be applied to a certain compiler. In particular,
 a `WartRemoverCompilerConfiguration` is a set of compiler options to be applied to the Scala 3 compiler for
 configuring the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover).
 
 A `WartRemoverCompilerConfiguration` can be defined as a map from _wart identifiers_ to `TraverserType`s, where
-a `TraverserType` defines the threat level assigned to the _wart_ when it is found during compilation.
+a `TraverserType` defines the threat level assigned to a _wart_ when it is found during compilation.
 
 When calling its method `toCompilerOptions`, the `WartRemoverCompilerConfiguration` produces a list of compiler
 options for configuring the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover), computed
@@ -102,13 +100,16 @@ from its internal map.
 These compiler options are finally applied by the `WartRemoverPlugin` to the Scala 3 compiler, after the evaluation
 of the project.
 
-### PrintTask
+### Tasks
 
-The task `wartRemoverCompilerOptions` is a type of `PrintTask`, where a `PrintTask` is a task which takes
-a text as input to be printed to the console when called by the user.
+- **wartRemoverCompilerOptions**
 
-In particular, the task `wartRemoverCompilerOptions` is configured within the `WartRemoverPlugin` to print
-the compiler options computed for configuring the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover).
+    The task `wartRemoverCompilerOptions` is a type of `PrintTask`, where a `PrintTask` is a task which takes
+    a text as input to be printed to the console when called by the user.
+    
+    In particular, the task `wartRemoverCompilerOptions` is defined by the `WartRemoverPlugin` after the project
+    evaluation, in order to print the compiler options computed for configuring the
+    [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover).
 
 ## Testing
 
@@ -119,6 +120,8 @@ The goal of the provided tests was mainly to verify that this plugin could be ap
 project and that the compiler options for the [WartRemover Compiler Plugin](https://github.com/wartremover/wartremover)
 were computed correctly from the [HOCON](https://github.com/lightbend/config/blob/main/HOCON.md#hocon-human-optimized-config-object-notation)
 configuration file provided by the user.
+
+The plugin has also been manually tested against several Scala 3 projects.
 
 > **Note**: the test suite should be extended to verify that all _warts_ are identified correctly within
 > some sample Scala 3 projects.
