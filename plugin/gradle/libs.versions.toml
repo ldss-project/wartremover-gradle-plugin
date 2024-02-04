@@ -8,7 +8,7 @@ kotlinx-version = "1.6.0"
 kotlin-hocon-serialization-version = "1.4.10"
 typesafe-config-version = "1.4.2"
 publish-version = "1.2.0"
-git-semantic-versioning-version = "1.1.9"
+git-semantic-versioning-version = "1.1.15"
 task-tree-generator-version = "2.1.1"
 spotless-version = "6.15.0"
 # insert the versions of the dependencies here...
